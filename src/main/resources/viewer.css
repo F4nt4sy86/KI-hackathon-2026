@@ -1,0 +1,158 @@
+/*
+ * Dunkles Erscheinungsbild der Moderationsleiste.
+ *
+ * Die Spielansicht selbst wird auf ein Canvas gezeichnet und ist von diesen Regeln
+ * nicht betroffen - hier geht es nur um die Bedienelemente.
+ */
+
+.root {
+    -fx-base: #1B1D28;
+    -fx-background: #1B1D28;
+    -fx-control-inner-background: #232633;
+    -fx-text-background-color: #E8EAF0;
+    -fx-accent: #17BEBB;
+    -fx-focus-color: #17BEBB;
+    -fx-faint-focus-color: transparent;
+    -fx-font-family: "Segoe UI", "SansSerif";
+}
+
+.split-pane {
+    -fx-background-color: #14161F;
+    -fx-padding: 0;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: #2B2E3B;
+    -fx-padding: 0 1 0 1;
+}
+
+/* ------------------------------------------------------------------ Knoepfe */
+
+.button {
+    -fx-background-color: #2E3242;
+    -fx-text-fill: #E8EAF0;
+    -fx-background-radius: 6;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #3A3F53;
+}
+
+.button:disabled {
+    -fx-opacity: 0.4;
+    -fx-cursor: default;
+}
+
+/* Der Startknopf ist der haeufigste Griff und darf sich abheben. */
+.button.primary-command {
+    -fx-background-color: #17BEBB;
+    -fx-text-fill: #10121A;
+    -fx-font-weight: bold;
+}
+
+.button.primary-command:hover {
+    -fx-background-color: #1ED6D2;
+}
+
+/* Abbrechen ist die einzige nicht umkehrbare Aktion - sie sieht auch so aus. */
+.button.danger-command {
+    -fx-background-color: #4A2530;
+    -fx-text-fill: #FF8A8A;
+}
+
+.button.danger-command:hover {
+    -fx-background-color: #5E2E3C;
+}
+
+/* ------------------------------------------------------------------ Tabelle */
+
+.table-view {
+    -fx-background-color: #232633;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #2B2E3B;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 26px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #9AA0B0;
+    -fx-font-size: 11px;
+    -fx-alignment: center-left;
+}
+
+.table-row-cell {
+    -fx-background-color: #232633;
+    -fx-border-color: transparent transparent #2B2E3B transparent;
+    -fx-cell-size: 30px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #262937;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #303648;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #9AA0B0;
+    -fx-font-size: 11px;
+}
+
+/* --------------------------------------------------------------- Protokoll */
+
+.list-view {
+    -fx-background-color: #1E2029;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 2 6 2 6;
+}
+
+.list-view .placeholder .label {
+    -fx-text-fill: #9AA0B0;
+    -fx-font-size: 11px;
+}
+
+.separator .line {
+    -fx-border-color: #2B2E3B;
+}
+
+/* -------------------------------------------------------------- Rueckfrage */
+
+.dialog-pane {
+    -fx-background-color: #232633;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: #E8EAF0;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #2B2E3B;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #E8EAF0;
+    -fx-font-size: 15px;
+}
+
+.tooltip {
+    -fx-background-color: #2B2E3B;
+    -fx-text-fill: #E8EAF0;
+    -fx-font-size: 11px;
+}
