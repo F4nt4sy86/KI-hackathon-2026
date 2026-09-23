@@ -36,9 +36,14 @@ public final class ResultOverlay {
             gc.setFont(Font.font("SansSerif", Math.min(26, height * 0.042)));
             gc.fillText("SIEGER", width / 2, titleY - Math.min(52, height * 0.08));
 
+            String name = view.nameOf(winner);
             gc.setFill(Palette.player(winner));
-            gc.setFont(Font.font("SansSerif", FontWeight.BOLD, Math.min(84, height * 0.13)));
-            gc.fillText(view.nameOf(winner), width / 2, titleY);
+            // Der Siegername darf schrumpfen, abgeschnitten gehoert er nicht - er ist
+            // das Einzige, worauf in diesem Augenblick jeder im Raum schaut.
+            gc.setFont(Labels.fitFont(name,
+                    size -> Font.font("SansSerif", FontWeight.BOLD, size),
+                    Math.min(84, height * 0.13), Math.min(30, height * 0.05), width * 0.86));
+            gc.fillText(name, width / 2, titleY);
         } else {
             gc.setFill(Palette.TEXT);
             gc.setFont(Font.font("SansSerif", FontWeight.BOLD, Math.min(64, height * 0.1)));
@@ -70,18 +75,23 @@ public final class ResultOverlay {
         double startY = height * 0.47;
         double fontSize = Math.min(22, rowHeight * 0.62);
 
+        Font rowFont = Font.font("SansSerif", FontWeight.BOLD, fontSize);
+        // Die Spalte reicht vom Namen bis kurz vor den Punktestand. Ohne diese Grenze
+        // schiebt sich ein langer Name unter die Zahl, und beides wird unlesbar.
+        double nameWidth = 230;
+
         for (int i = 0; i < scores.size(); i++) {
             MatchResult s = scores.get(i);
             double y = startY + i * rowHeight;
 
-            gc.setFont(Font.font("SansSerif", FontWeight.BOLD, fontSize));
+            gc.setFont(rowFont);
             gc.setFill(Palette.TEXT_DIM);
             gc.setTextAlign(TextAlignment.RIGHT);
             gc.fillText(s.placement() + ".", width / 2 - 150, y);
 
             gc.setFill(Palette.player(s.id()));
             gc.setTextAlign(TextAlignment.LEFT);
-            gc.fillText(view.nameOf(s.id()), width / 2 - 130, y);
+            gc.fillText(Labels.fit(view.nameOf(s.id()), rowFont, nameWidth), width / 2 - 130, y);
 
             gc.setFill(Palette.TEXT);
             gc.setTextAlign(TextAlignment.RIGHT);

@@ -3,6 +3,7 @@ package com.btc.hackathon.viewer.ui;
 import com.btc.hackathon.viewer.control.CommandAvailability;
 import com.btc.hackathon.viewer.model.Slot;
 import com.btc.hackathon.viewer.net.ConnectionState;
+import com.btc.hackathon.viewer.render.Labels;
 import com.btc.hackathon.viewer.render.Palette;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -17,6 +18,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.converter.DefaultStringConverter;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -35,6 +37,9 @@ import java.util.function.IntConsumer;
  * Namensaenderung braeche ab.
  */
 public final class LobbyTableView extends TableView<Slot> {
+
+    /** Obergrenze des Servers fuer einen Namen, in Zeichen. */
+    private static final int NAME_LIMIT = 24;
 
     private final ObservableList<Slot> rows = FXCollections.observableArrayList();
 
@@ -71,14 +76,31 @@ public final class LobbyTableView extends TableView<Slot> {
         return column;
     }
 
-    /** Der Name ist bearbeitbar - Bots koennen keinen senden, er kommt von der Moderation. */
+    /**
+     * Der Name ist bearbeitbar.
+     *
+     * <p>Bots benennen sich inzwischen selbst; ein {@code rename} von hier ueberschreibt
+     * das dauerhaft. Genau dafuer ist die Spalte da: um zwei Bots auseinanderzuhalten,
+     * die sich denselben Namen gegeben haben.
+     */
     private TableColumn<Slot, String> nameColumn(BiConsumer<Integer, String> onRename) {
         TableColumn<Slot, String> column = new TableColumn<>("Teilnehmer");
         column.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().displayName()));
-        column.setCellFactory(TextFieldTableCell.forTableColumn());
+        // Die Spalte ist schmaler als 24 Zeichen; was abgeschnitten wird, muss wenigstens
+        // beim Daraufzeigen lesbar sein.
+        column.setCellFactory(c -> new TextFieldTableCell<Slot, String>(new DefaultStringConverter()) {
+            @Override
+            public void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                setTooltip(empty || name == null || name.isBlank() ? null : new Tooltip(name));
+            }
+        });
         column.setOnEditCommit(event -> {
             Slot slot = event.getRowValue();
             String name = event.getNewValue() == null ? "" : event.getNewValue().trim();
+            // Auf dieselben 24 Zeichen kuerzen wie der Server. Sonst steht im
+            // Befehlsprotokoll etwas anderes, als danach in der Tabelle erscheint.
+            name = Labels.limit(name, NAME_LIMIT);
             if (!name.isEmpty() && !name.equals(slot.displayName())) {
                 onRename.accept(slot.id(), name);
             }

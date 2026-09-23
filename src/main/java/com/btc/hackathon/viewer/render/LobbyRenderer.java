@@ -116,10 +116,15 @@ public final class LobbyRenderer {
         drawAvatar(gc, x + w * 0.05, y + h * 0.12, h * 0.76, slot, nowNanos, color);
 
         double textX = x + w * 0.05 + h * 0.82;
+        // Was rechts neben dem Bild uebrig bleibt. Der Name wird darauf zugeschnitten,
+        // statt auf eine geratene Zeichenzahl: bei 24 erlaubten Zeichen entscheidet die
+        // Breite der Zeichen, nicht ihre Anzahl.
+        double textWidth = x + w - textX - w * 0.05;
         gc.setTextAlign(TextAlignment.LEFT);
         gc.setFill(Palette.TEXT);
-        gc.setFont(Font.font("SansSerif", FontWeight.BOLD, Math.min(24, h * 0.22)));
-        gc.fillText(shorten(slot.displayName(), 16), textX, y + h * 0.42);
+        Font nameFont = Font.font("SansSerif", FontWeight.BOLD, Math.min(24, h * 0.22));
+        gc.setFont(nameFont);
+        gc.fillText(Labels.fit(nameOf(slot), nameFont, textWidth), textX, y + h * 0.42);
 
         gc.setFont(Font.font("SansSerif", Math.min(15, h * 0.15)));
         if (slot.stale()) {
@@ -198,10 +203,9 @@ public final class LobbyRenderer {
         gc.fillText(hint, width / 2, height * 0.88);
     }
 
-    private static String shorten(String s, int max) {
-        if (s == null || s.isBlank()) {
-            return "(ohne Namen)";
-        }
-        return s.length() <= max ? s : s.substring(0, max - 1) + "…";
+    /** Der Server vergibt immer einen Namen; leer bleibt er nur, wenn etwas fehlt. */
+    private static String nameOf(Slot slot) {
+        String name = slot.displayName();
+        return name == null || name.isBlank() ? "(ohne Namen)" : name;
     }
 }

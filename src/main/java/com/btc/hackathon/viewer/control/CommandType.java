@@ -22,7 +22,10 @@ public enum CommandType {
     UNLOCK("unlock", "Lobby oeffnen"),
     /** Gibt einen Platz frei. Der Bot muss sich neu anmelden. */
     KICK("kick", "Platz freigeben"),
-    /** Setzt den Anzeigenamen eines Platzes. Bots koennen keinen senden. */
+    /**
+     * Setzt den Anzeigenamen eines Platzes und ueberschreibt damit dauerhaft den Namen,
+     * den der Bot sich bei der Anmeldung selbst gegeben hat.
+     */
     RENAME("rename", "Umbenennen"),
     /** Einstellungen fuer das <em>naechste</em> Match. */
     CONFIGURE_MAP("configure_map", "Karte einstellen"),

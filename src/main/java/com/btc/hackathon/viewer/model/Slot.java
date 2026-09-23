@@ -30,7 +30,18 @@ public record Slot(
         name = name == null ? "" : name;
     }
 
-    /** Anzeigename; Bots koennen keinen senden, der Server vergibt {@code bot-<id>}. */
+    /**
+     * Anzeigename.
+     *
+     * <p>Er kommt aus dem Anmeldepaket des Bots, aus einem {@code rename} der Moderation,
+     * oder - wenn beides fehlt - als {@code bot-<id>} vom Server. Ein {@code rename}
+     * gewinnt und bleibt gewinnen: ein Bot, der sich neu verbindet, kann die Beschriftung
+     * nicht zuruecksetzen, mit der die Moderation ihn von einem zweiten unterscheidet.
+     *
+     * <p>Der Server bereinigt den Namen (Steuerzeichen raus, 24 Zeichen Obergrenze), er
+     * ist also unbesehen darstellbar. Ungekuerzt darstellbar ist er deshalb nicht -
+     * dafuer gibt es {@code Labels}.
+     */
     public String displayName() {
         return name.isBlank() ? "bot-" + id : name;
     }

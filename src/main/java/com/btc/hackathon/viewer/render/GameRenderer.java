@@ -266,7 +266,12 @@ public final class GameRenderer {
         if (name == null || name.isBlank()) {
             return;
         }
-        gc.setFont(Font.font("SansSerif", Math.max(9, vp.tileSize() * 0.26)));
+        Font font = Font.font("SansSerif", Math.max(9, vp.tileSize() * 0.26));
+        // Hoechstens drei Kacheln breit. Ein selbstgewaehlter Name darf 24 Zeichen haben -
+        // ungekuerzt deckt das Schild die Nachbarn zu, und wer am Rand steht, schreibt
+        // aus dem Feld heraus.
+        name = Labels.fit(name, font, vp.tileSize() * 3.0);
+        gc.setFont(font);
         gc.setTextAlign(TextAlignment.CENTER);
         // Dunkler Versatz darunter, damit die Schrift auf jedem Untergrund lesbar bleibt.
         gc.setFill(Palette.BACKGROUND);

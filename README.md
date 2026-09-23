@@ -115,7 +115,7 @@ Zwei Dinge gehören dazugesagt:
 
 ## Was der Viewer vom Protokoll wissen muss
 
-Das Format ist vollständig im `VISUALIZER_GUIDE.md` des Servers beschrieben. Vier Punkte
+Das Format ist vollständig im `VISUALIZER_GUIDE.md` des Servers beschrieben. Fünf Punkte
 bestimmen hier den Aufbau — sie sind die Stellen, an denen es sonst schiefgeht:
 
 **1. Das Spielfeld kommt genau einmal.** `match_init` liefert `tiles`, danach nur noch
@@ -134,6 +134,15 @@ Eine Pause blockiert auch den Start, also muss sie sich in jeder Phase aufheben 
 **4. `preview_map` wird nicht mit `ack` beantwortet**, sondern mit der `map_preview`-
 Nachricht selbst. Der `ModerationChannel` behandelt das als Sonderfall; ohne ihn liefe der
 Befehl in die Zeitüberschreitung, obwohl er ausgeführt wurde.
+
+**5. Namen kommen von fremder Hand.** Ein Bot benennt sich im Anmeldepaket selbst; ein
+`rename` der Moderation überschreibt das dauerhaft, auch über eine Wiederanmeldung
+hinweg. Der Server bereinigt den Namen (Steuerzeichen raus, 24 Zeichen Obergrenze) — er
+ist also unbesehen *darstellbar*, aber nicht unbesehen *darstellbar in der vorhandenen
+Spalte*. Wie breit 24 Zeichen werden, weiß nur die Schrift: `WWWW…` ist dreimal so breit
+wie dieselbe Anzahl schmaler Zeichen. `Labels` misst deshalb und schneidet zu — auf
+Codepoints, damit ein Emoji nicht in der Mitte zerfällt. Der Siegername schrumpft, statt
+abgeschnitten zu werden; er ist das Einzige, worauf in dem Moment alle schauen.
 
 Dazu: `can_start` liefert der Server mit. Die Knopfleiste benutzt dieses Flag, statt die
 Regel nachzubauen — sonst driften Anzeige und tatsächliches Verhalten auseinander.
