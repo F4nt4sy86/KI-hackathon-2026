@@ -145,6 +145,29 @@ Regel nachzubauen — sonst driften Anzeige und tatsächliches Verhalten auseina
 (`{"type":"ack","cmd":"start"}`) — das Protokoll kennt keine laufende Nummer, also führt
 `ModerationChannel` eine Warteschlange in Absendereihenfolge.
 
+Welcher Knopf bedienbar ist, entscheidet `CommandAvailability` — nachgebildet ist dabei,
+was der Server tatsächlich annimmt, nicht die Tabelle aus `MODERATION_API.md`. Zwei
+Stellen weichen bewusst ab: `pause` bietet die Leiste nur während eines Matches an,
+obwohl der Server es überall annähme, und `reset` nicht in der offenen Lobby, wo es
+nichts wegzuräumen gibt.
+
+**Zwei Knöpfe fragen nach**, weil sie eine laufende Vorführung beenden und sich nicht
+zurücknehmen lassen: „Match beenden" immer, „Zurück zur Lobby" nur während `countdown`
+und `running` — dort ist es der schärfere der beiden Befehle, denn es stoppt das Spiel
+*und* räumt das Ergebnis weg, das „Beenden" stehen ließe. Nach dem Match ist derselbe
+Knopf der gewohnte nächste Schritt und fragt nicht: eine Rückfrage, die immer kommt,
+klickt man irgendwann weg, ohne sie zu lesen.
+
+### Eine Einschränkung, die nicht bei uns liegt
+
+Verbindet sich der Viewer **mitten in einem Match** — nach einem Serverwechsel, einem
+Abriss oder einem Neustart —, schickt der Server in `match_init` das Spielfeld vom
+Matchbeginn: `ArenaSession.board` ist eine Kopie, die beim Start gesetzt und nie
+fortgeschrieben wird. Zerstörte Kisten stehen dann wieder da und verschwinden nicht mehr,
+weil `tile_changes` erst ab diesem Tick zählt. Aus den gelieferten Daten ist das nicht zu
+reparieren; gemeldet ist es. Dasselbe gilt für `match_over`: wer dort erst dazukommt,
+bekommt kein `match_end` und damit keine Ergebnistafel.
+
 ---
 
 ## Grafiken
